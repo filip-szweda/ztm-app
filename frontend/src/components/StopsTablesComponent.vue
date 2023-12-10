@@ -1,15 +1,18 @@
 <template>
-  <vue-good-table
-    :columns="columns"
-    :rows="rows"
-    :paginate="true"
-    :lineNumbers="true"
-    :globalSearch="true"
-  />
+  <div v-for="(delayData, index) in allDelays" :key="index"> 
+    <vue-good-table
+      :columns="columns"
+      :rows="delayData"
+      :paginate="false"
+      :lineNumbers="true"
+      :globalSearch="false"
+    />
+  </div>
 </template>
 
 <script>
 import { VueGoodTable } from 'vue-good-table-next';
+import axios from 'axios';
 
 export default {
   name: 'StopsTablesComponent',
@@ -18,18 +21,33 @@ export default {
   },
   data() {
     return {
+      stopIds: [1013, 1014, 1015],
       columns: [
-        { label: 'ID', field: 'id' },
-        { label: 'Name', field: 'name' },
-        { label: 'Age', field: 'age' },
-        // Additional columns as needed
+        { label: 'Route ID', field: 'routeId' },
+        { label: 'Estimated Time', field: 'estimatedTime' },
+        { label: 'Delay (Seconds)', field: 'delayInSeconds' },
       ],
-      rows: [
-        { id: 1, name: 'John Doe', age: 30 },
-        { id: 2, name: 'Jane Doe', age: 25 },
-        // Additional rows as needed
-      ]
+      allDelays: []
     };
+  },
+  created() {
+    this.fetchAllDelays();
+  },
+  methods: {
+    async fetchAllDelays() {
+      for (const stopId of this.stopIds) {
+        try {
+          const response = await axios.get(`http://ckan2.multimediagdansk.pl/delays?stopId=${stopId}`);
+          this.allDelays.push(response.data.delay.map(item => ({
+            routeId: item.routeId,
+            estimatedTime: item.estimatedTime,
+            delayInSeconds: item.delayInSeconds
+          })));
+        } catch (error) {
+          console.error('Error fetching delay data for stop ID', stopId, ':', error);
+        }
+      }
+    }
   }
 };
 </script>
