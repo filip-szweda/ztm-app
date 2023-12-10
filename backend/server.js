@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/userDB', {
+mongoose.connect('mongodb://localhost:27017/ztm-app', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });

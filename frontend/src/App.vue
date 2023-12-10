@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Register from './components/Register.vue';
-import Login from './components/Login.vue';
+import Register from './components/RegisterUser.vue';
+import Login from './components/LoginUser.vue';
 
 export default {
   name: 'App',
