@@ -28,7 +28,7 @@
           });
           alert('Registration successful');
         } catch (error) {
-          alert('Registration failed');
+          alert('Registration failed: ' + error);
         }
       }
     }

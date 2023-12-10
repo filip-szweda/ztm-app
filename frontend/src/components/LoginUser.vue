@@ -29,7 +29,7 @@
           localStorage.setItem('token', response.data.token);
           alert('Login successful');
         } catch (error) {
-          alert('Login failed');
+          alert('Login failed: ' + error);
         }
       }
     }
