@@ -11,6 +11,7 @@
   
   <script>
   import axios from 'axios';
+  import router from '@/router';
   
   export default {
     data() {
@@ -27,7 +28,7 @@
             password: this.password
           });
           localStorage.setItem('token', response.data.token);
-          this.$router.push('/stops');
+          router.push('/stops');
           alert('Login successful');
         } catch (error) {
           alert('Login failed: ' + error);
