@@ -16,7 +16,7 @@ export default {
     Register,
     Login
   }
-};
+}
 </script>
 
 <style>

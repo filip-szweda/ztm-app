@@ -27,6 +27,7 @@
             password: this.password
           });
           localStorage.setItem('token', response.data.token);
+          this.$router.push('/stops');
           alert('Login successful');
         } catch (error) {
           alert('Login failed: ' + error);
