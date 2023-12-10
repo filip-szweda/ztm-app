@@ -1,40 +1,35 @@
 <template>
-  <h1>Stops Tables</h1>
   <vue-good-table
     :columns="columns"
     :rows="rows"
     :paginate="true"
     :lineNumbers="true"
-    styleClass="vgt-table"
-  ></vue-good-table>
+    :globalSearch="true"
+  />
 </template>
-  
+
 <script>
-import VueGoodTablePlugin from 'vue-good-table';
-import 'vue-good-table/dist/vue-good-table.css'
+import { VueGoodTable } from 'vue-good-table-next';
 
 export default {
-  name: 'StopsTables',
+  name: 'StopsTablesComponent',
   components: {
-    'vue-good-table': VueGoodTablePlugin.VueGoodTable
+    VueGoodTable
   },
   data() {
     return {
       columns: [
+        { label: 'ID', field: 'id' },
         { label: 'Name', field: 'name' },
-        { label: 'Email', field: 'email' }
-        // Add more columns as needed
+        { label: 'Age', field: 'age' },
+        // Additional columns as needed
       ],
       rows: [
-        // Rows will be populated with user data
+        { id: 1, name: 'John Doe', age: 30 },
+        { id: 2, name: 'Jane Doe', age: 25 },
+        // Additional rows as needed
       ]
     };
-  },
-  // Add methods, computed properties, etc., as needed
+  }
 };
 </script>
-
-<style>
-/* Add custom styles for your table here */
-</style>
-  
