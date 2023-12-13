@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       stopIdInput: '',
-      stopIds: [1013, 1014, 1015],
+      stopsIds: [],
       columns: [
         { label: 'Route ID', field: 'routeId' },
         { label: 'Estimated Time', field: 'estimatedTime' },
@@ -33,12 +33,29 @@ export default {
       allDelays: []
     };
   },
-  created() {
+  async created() {
+    await this.fetchUserStopsIds();
     this.fetchAllDelays();
   },
   methods: {
+    async fetchUserStopsIds() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+        
+        const response = await axios.get('http://localhost:3000/getUserStopsIds', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        this.stopsIds = response.data.stopsIds;
+      } catch (error) {
+        console.error('Error fetching user stops IDs:', error);
+      }
+    },
     async fetchAllDelays() {
-      for (const stopId of this.stopIds) {
+      for (const stopId of this.stopsIds) {
         try {
           const response = await axios.get(`http://ckan2.multimediagdansk.pl/delays?stopId=${stopId}`);
           this.allDelays.push(response.data.delay.map(item => ({
@@ -59,11 +76,12 @@ export default {
       }
 
       try {
-        await axios.post('http://localhost:3000/updateStopId', {
+        await axios.post('http://localhost:3000/addUserStopId', {
           token,
           stopId: this.stopIdInput
-        })
+        });
         this.stopIdInput = '';
+        this.fetchUserStopsIds();
         alert('Stop ID added successfully');
       } catch (error) {
         alert('Stop ID could not be added: ' + error);

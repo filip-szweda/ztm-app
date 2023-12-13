@@ -62,7 +62,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/updateStopId', async (req, res) => {
+app.post('/addUserStopId', async (req, res) => {
   try {
     const { token, stopId } = req.body;
 
@@ -96,6 +96,29 @@ function updateUserStopId(userId, stopId) {
     { new: true }
   ).exec();
 }
+
+app.get('/getUserStopsIds', async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+
+    jwt.verify(token, 'secret_key', async (err, decoded) => {
+      if (err) {
+        return res.status(401).send('Invalid token');
+      }
+
+      const userId = decoded.id;
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+
+      res.send({ stopsIds: user.stopsIds });
+    });
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`);
