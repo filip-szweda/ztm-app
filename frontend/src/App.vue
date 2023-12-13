@@ -12,38 +12,61 @@
 </script>
 
 <style>
-    #app {
-        font-family: Avenir, Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: center;
-        color: #2c3e50;
-        margin-top: 60px;
-    }
+  :root {
+    --background: #282a36;
+    --foreground: #f8f8f2;
+    --comment: #6272a4;
+    --green: #50fa7b;
+    --cyan: #8be9fd;
+    --purple: #bd93f9;
+  }
 
-    h1 {
-        font-size: 2em;
-        margin-bottom: 20px;
-    }
+  #app {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 20px;
+  }
 
-    input {
-        margin: 10px 0;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+  h1 {
+    color: var(--cyan);
+  }
 
-    button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 15px 20px;
-        margin: 10px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+  h3 {
+    color: var(--purple); /* Using the purple color for h3 */
+    margin: 5px 0;
+  }
 
-    button:hover {
-        background-color: #45a049;
-    }
+  span {
+    margin-right: 10px;
+    display: inline-block;
+  }
+
+  input {
+    background-color: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--comment);
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    background-color: var(--green);
+    color: var(--background);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: var(--cyan);
+  }
 </style>

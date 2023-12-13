@@ -1,14 +1,18 @@
 <template>
   <textarea v-model="stopIdInput"></textarea>
   <button @click="addStopId">Add Stop Id</button>
-  <div v-for="(delayData, index) in allDelays" :key="index"> 
+  <div v-for="(delay, index) in allDelays" :key="index">
+    <br />
+    <br />
+    <h3>Stop #{{ stopsIds[index] }}</h3>
     <vue-good-table
       :columns="columns"
-      :rows="delayData"
+      :rows="delay"
       :paginate="false"
       :lineNumbers="true"
       :globalSearch="false"
     />
+    <button @click="removeStopId(stopsIds[index])">Remove Stop</button>
   </div>
 </template>
 
@@ -26,16 +30,16 @@ export default {
       stopIdInput: '',
       stopsIds: [],
       columns: [
-        { label: 'Route ID', field: 'routeId' },
-        { label: 'Estimated Time', field: 'estimatedTime' },
-        { label: 'Delay (Seconds)', field: 'delayInSeconds' },
+        { label: 'Route ID', field: 'routeId', sortable: false },
+        { label: 'Estimated Time', field: 'estimatedTime', sortable: false },
+        { label: 'Delay (Seconds)', field: 'delayInSeconds', sortable: false },
       ],
       allDelays: []
     };
   },
   async created() {
     await this.fetchUserStopsIds();
-    this.fetchAllDelays();
+    await this.fetchAllDelays();
   },
   methods: {
     async fetchUserStopsIds() {
@@ -86,6 +90,9 @@ export default {
       } catch (error) {
         alert('Stop ID could not be added: ' + error);
       }
+    },
+    async removeStopId(stopId) {
+      print(stopId);
     }
   }
 };

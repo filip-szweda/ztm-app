@@ -97,6 +97,38 @@ function updateUserStopId(userId, stopId) {
   ).exec();
 }
 
+app.post('/removeUserStopId', async (req, res) => {
+  try {
+    const { token, stopId } = req.body;
+
+    jwt.verify(token, 'secret_key', (err, decoded) => {
+      if (err) {
+        return res.status(401).send('Invalid token');
+      }
+
+      const userId = decoded.id;
+
+      removeUserStopId(userId, stopId)
+        .then(() => {
+          res.send({ message: 'Stop ID removed successfully' });
+        })
+        .catch(error => {
+          res.status(500).send('Error removing Stop ID:', error.message);
+        });
+    });
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+function removeUserStopId(userId, stopId) {
+  return User.findOneAndUpdate(
+    { _id: userId }, 
+    { $pull: { stopsIds: stopId } },
+    { new: true }
+  ).exec();
+}
+
 app.get('/getUserStopsIds', async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
