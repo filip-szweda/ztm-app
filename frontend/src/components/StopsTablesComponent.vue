@@ -1,4 +1,6 @@
 <template>
+  <textarea v-model="stopIdInput"></textarea>
+  <button @click="addStopId">Add Stop Id</button>
   <div v-for="(delayData, index) in allDelays" :key="index"> 
     <vue-good-table
       :columns="columns"
@@ -21,6 +23,7 @@ export default {
   },
   data() {
     return {
+      stopIdInput: '',
       stopIds: [1013, 1014, 1015],
       columns: [
         { label: 'Route ID', field: 'routeId' },
@@ -46,6 +49,24 @@ export default {
         } catch (error) {
           console.error('Error fetching delay data for stop ID', stopId, ':', error);
         }
+      }
+    },
+    async addStopId() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      try {
+        await axios.post('http://localhost:3000/updateStopId', {
+          token,
+          stopId: this.stopIdInput
+        })
+        this.stopIdInput = '';
+        alert('Stop ID added successfully');
+      } catch (error) {
+        alert('Stop ID could not be added: ' + error);
       }
     }
   }

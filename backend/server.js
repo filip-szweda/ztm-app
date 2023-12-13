@@ -1,11 +1,9 @@
-// Import required modules
 const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
-// Connect to MongoDB
 mongoose
   .connect("mongodb://admin:admin@localhost:27017/", {
     useNewUrlParser: true,
@@ -15,35 +13,33 @@ mongoose
   .then(() => console.log("MongoDB successfully connected"))
   .catch((err) => console.error("MongoDB connection error: ", err));
 
-// Define a User Schema
+
 const userSchema = new mongoose.Schema({
   email: String,
-  password: String
+  password: String,
+  stopsIds: [String],
 });
 
-// Create User Model
 const User = mongoose.model('User', userSchema);
 
-// Initialize Express App
 const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: 'http://localhost:8080', // or the specific origin of your Vue app
-  methods: ['GET', 'POST'], // allowed methods
-  credentials: true // if your frontend needs to send cookies or credentials with requests
+  origin: 'http://localhost:8080',
+  methods: ['GET', 'POST'],
+  credentials: true
 }));
 
 app.get('/', (req, res) => {
   res.json({ app: 'Run app' });
 });
 
-// User Registration Endpoint
 app.post('/register', async (req, res) => {
   try {
     const { email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ email, password: hashedPassword });
+    const user = new User({ email, password: hashedPassword, stopsIds: [] });
     await user.save();
     res.status(201).send('User registered successfully');
   } catch (error) {
@@ -51,7 +47,6 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// User Login Endpoint
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -67,7 +62,41 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Start the server
+app.post('/updateStopId', async (req, res) => {
+  try {
+    const { token, stopId } = req.body;
+
+    jwt.verify(token, 'secret_key', (err, decoded) => {
+      if (err) {
+        return res.status(401).send('Invalid token');
+      }
+
+      const userId = decoded.id;
+
+      updateUserStopId(userId, stopId)
+        .then(() => {
+          res.send({ message: 'Stop ID updated successfully' });
+        })
+        .catch(error => {
+          res.status(500).send('Error updating Stop ID: ', error.response.data);
+        });
+    });
+  } catch (error) {
+    res.status(500).send(error.response.data);
+  }
+});
+
+function updateUserStopId(userId, stopId) {
+  return User.findOneAndUpdate(
+    { 
+      _id: userId,
+      stopsIds: { $ne: stopId }
+    }, 
+    { $push: { stopsIds: stopId } },
+    { new: true }
+  ).exec();
+}
+
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`);
 });
