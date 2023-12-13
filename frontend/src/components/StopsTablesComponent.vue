@@ -42,6 +42,12 @@ export default {
     await this.fetchAllDelays();
   },
   methods: {
+    async refreshStopsData() {
+      this.stopIdInput = '';
+      await this.fetchUserStopsIds();
+      this.allDelays = [];
+      this.fetchAllDelays();
+    },
     async fetchUserStopsIds() {
       try {
         const token = localStorage.getItem('token');
@@ -55,7 +61,7 @@ export default {
         });
         this.stopsIds = response.data.stopsIds;
       } catch (error) {
-        console.error('Error fetching user stops IDs:', error);
+        console.error('Error fetching user stops Ids:', error);
       }
     },
     async fetchAllDelays() {
@@ -68,7 +74,7 @@ export default {
             delayInSeconds: item.delayInSeconds
           })));
         } catch (error) {
-          console.error('Error fetching delay data for stop ID', stopId, ':', error);
+          console.error('Error fetching stop data', stopId, ':', error);
         }
       }
     },
@@ -84,15 +90,29 @@ export default {
           token,
           stopId: this.stopIdInput
         });
-        this.stopIdInput = '';
-        this.fetchUserStopsIds();
-        alert('Stop ID added successfully');
+        alert('Stop added successfully');
+        this.refreshStopsData();
       } catch (error) {
-        alert('Stop ID could not be added: ' + error);
+        alert('Stop could not be added: ' + error);
       }
     },
     async removeStopId(stopId) {
-      print(stopId);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      try {
+        await axios.post('http://localhost:3000/removeUserStopId', {
+          token,
+          stopId
+        });
+        alert('Stop removed successfully');
+        this.refreshStopsData();
+      } catch (error) {
+        alert('Stop could not be removed: ' + error);
+      }
     }
   }
 };
