@@ -1,6 +1,6 @@
 <template>
   <textarea v-model="stopIdInput"></textarea>
-  <button @click="addStopId">Add Stop Id</button>
+  <button @click="addStopId">Add Stop</button>
   <div v-for="(delay, index) in allDelays" :key="index">
     <br />
     <br />
