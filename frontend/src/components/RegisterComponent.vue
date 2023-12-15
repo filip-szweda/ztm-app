@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="formStyle"> 
     <h2>Register</h2>
     <form @submit.prevent="register">
       <input v-model="email" type="email" placeholder="Email" required />
@@ -16,6 +16,13 @@ export default {
       email: '',
       password: ''
     };
+  },
+  computed: {
+    formStyle() {
+      return {
+        backgroundColor: this.email.length > 0 && this.password.length > 0 ? '#049343' : '#1E2029'
+      };
+    }
   },
   methods: {
     async register() {
