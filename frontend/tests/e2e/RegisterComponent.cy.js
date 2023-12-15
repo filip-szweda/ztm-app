@@ -3,11 +3,11 @@ describe('Register Component E2E Tests', () => {
         cy.visit('http://localhost:8080/register');
     });
 
-    it('Loads the register form', () => {
+    it('loads the register form', () => {
         cy.get('form').should('exist');
     });
 
-    it('Accepts input', () => {
+    it('accepts input', () => {
         const testEmail = 'test@example.com';
         const testPassword = 'password123';
 
