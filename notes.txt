@@ -1,0 +1,7 @@
+backend
+    npm run dev
+    docker compose up -d
+
+frontend
+    bpm run test:unit
+    npx cypress run (after "docker compose up -d" & "npm run dev")
