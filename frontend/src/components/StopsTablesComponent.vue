@@ -1,24 +1,26 @@
 <template>
-  <textarea v-model="stopIdInput"></textarea>
-  <button @click="addStopId">Add Stop</button>
-  <div v-for="(delay, index) in allDelays" :key="index">
-    <br />
-    <br />
-    <h3>Stop #{{ stopsIds[index] }}</h3>
-    <vue-good-table
-      :columns="columns"
-      :rows="delay"
-      :paginate="false"
-      :lineNumbers="true"
-      :globalSearch="false"
-    />
-    <button @click="removeStopId(stopsIds[index])">Remove Stop</button>
+  <div>
+    <textarea v-model="stopIdInput"></textarea>
+    <button @click="addStopId">Add Stop</button>
+
+    <div v-for="(delay, index) in allDelays" :key="index">
+      <br />
+      <br />
+      <h3>Stop #{{ stopsIds[index] }}</h3>
+      <vue-good-table
+        :columns="columns"
+        :rows="delay"
+        :paginate="false"
+        :lineNumbers="true"
+        :globalSearch="false"
+      />
+      <button @click="removeStopId(stopsIds[index])">Remove Stop</button>
+    </div>
   </div>
 </template>
 
 <script>
 import { VueGoodTable } from 'vue-good-table-next';
-import axios from 'axios';
 
 export default {
   name: 'StopsTablesComponent',
@@ -56,7 +58,7 @@ export default {
           return;
         }
         
-        const response = await axios.get('http://localhost:3000/getUserStopsIds', {
+        const response = await this.$axios.get('http://localhost:3000/getUserStopsIds', {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.stopsIds = response.data.stopsIds;
@@ -67,7 +69,7 @@ export default {
     async fetchAllDelays() {
       for (const stopId of this.stopsIds) {
         try {
-          const response = await axios.get(`http://ckan2.multimediagdansk.pl/delays?stopId=${stopId}`);
+          const response = await this.$axios.get(`http://ckan2.multimediagdansk.pl/delays?stopId=${stopId}`);
           this.allDelays.push(response.data.delay.map(item => ({
             routeId: item.routeId,
             estimatedTime: item.estimatedTime,
@@ -86,7 +88,7 @@ export default {
       }
 
       try {
-        await axios.post('http://localhost:3000/addUserStopId', {
+        await this.$axios.post('http://localhost:3000/addUserStopId', {
           token,
           stopId: this.stopIdInput
         });
@@ -104,7 +106,7 @@ export default {
       }
 
       try {
-        await axios.post('http://localhost:3000/removeUserStopId', {
+        await this.$axios.post('http://localhost:3000/removeUserStopId', {
           token,
           stopId
         });

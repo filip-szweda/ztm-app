@@ -10,8 +10,6 @@
 </template>
   
 <script>
-import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -22,7 +20,7 @@ export default {
   methods: {
     async register() {
       try {
-        await axios.post('http://localhost:3000/register', {
+        await this.$axios.post('http://localhost:3000/register', {
           email: this.email,
           password: this.password
         });
