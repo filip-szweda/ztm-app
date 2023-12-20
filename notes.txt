@@ -3,5 +3,9 @@ backend
     docker compose up -d
 
 frontend
-    bpm run test:unit
+    npm run test:unit
     npx cypress run (after "docker compose up -d" & "npm run dev")
+
+mongodb-express
+    admin
+    pass
